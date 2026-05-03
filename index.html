@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>医疗健康信息检索 Demo</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      background: #f3f7f8;
+      color: #132329;
+    }
+
+    .page {
+      min-height: 100vh;
+    }
+
+    .hero {
+      margin: 20px;
+      padding: 30px 34px;
+      border-radius: 26px;
+      color: white;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(45, 212, 191, 0.38), transparent 30%),
+        linear-gradient(135deg, #0f172a 0%, #0f766e 58%, #14b8a6 100%);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.22);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .hero-label {
+      margin: 0 0 10px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ccfbf1;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.2;
+    }
+
+    .hero-desc {
+      margin: 12px 0 0;
+      color: #d1fae5;
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 800px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      border: none;
+      padding: 13px 22px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .primary-btn {
+      background: white;
+      color: #0f766e;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.24);
+    }
+
+    .secondary-btn {
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+    }
+
+    .secondary-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr) 390px;
+      gap: 20px;
+      padding: 0 20px 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+    }
+
+    .left-card {
+      padding: 20px;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+
+    .card-title {
+      margin: 0 0 16px;
+      font-size: 18px;
+      color: #111827;
+    }
+
+    .workflow-btn {
+      width: 100%;
+      border: 1px solid #ccfbf1;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #f0fdfa;
+      color: #334155;
+      text-align: left;
+      cursor: pointer;
+      font-weight: 800;
+      transition: 0.2s;
+    }
+
+    .workflow-btn:hover {
+      transform: translateY(-1px);
+      border-color: #5eead4;
+    }
+
+    .workflow-btn.active {
+      background: #0f766e;
+      color: white;
+      box-shadow: 0 12px 22px rgba(15, 118, 110, 0.22);
+    }
+
+    .workflow-btn span {
+      display: inline-block;
+      margin-right: 8px;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    .ability-box {
+      margin-top: 22px;
+      padding: 16px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    .ability-box h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .ability-box ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #475569;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .notice {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .center {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .overview {
+      padding: 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 270px;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .small-label {
+      margin: 0 0 8px;
+      color: #0f766e;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .overview h2 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .overview p {
+      margin: 10px 0 0;
+      color: #64748b;
+      line-height: 1.8;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .metric {
+      padding: 16px 12px;
+      border-radius: 18px;
+      background: #f0fdfa;
+      text-align: center;
+    }
+
+    .metric strong {
+      display: block;
+      color: #0f766e;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 6px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .section {
+      padding: 22px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .section-head p {
+      margin: 4px 0 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .nodes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .node {
+      padding: 18px;
+      border-radius: 20px;
+      background: #f0fdfa;
+      border: 1px solid #ccfbf1;
+      min-height: 130px;
+      position: relative;
+    }
+
+    .node-step {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #ccfbf1;
+      color: #0f766e;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .node h3 {
+      margin: 14px 0 8px;
+      font-size: 16px;
+    }
+
+    .node p {
+      margin: 0;
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-card,
+    .history-card {
+      padding: 22px;
+      height: fit-content;
+    }
+
+    .form-item {
+      margin-bottom: 16px;
+    }
+
+    .form-item label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #1f2937;
+    }
+
+    .form-item input,
+    .form-item select,
+    .form-item textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 13px;
+      padding: 12px 13px;
+      font-size: 14px;
+      background: white;
+      color: #111827;
+      outline: none;
+    }
+
+    .form-item input::placeholder,
+    .form-item textarea::placeholder {
+      color: #94a3b8;
+    }
+
+    .form-item input:focus,
+    .form-item select:focus,
+    .form-item textarea:focus {
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .empty {
+      padding: 36px;
+      border-radius: 20px;
+      background: #f8fafc;
+      color: #94a3b8;
+      text-align: center;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .loading {
+      padding: 24px;
+      border-radius: 18px;
+      background: #f0fdfa;
+      color: #0f766e;
+      font-weight: 800;
+      border: 1px solid #99f6e4;
+    }
+
+    .error {
+      padding: 18px;
+      border-radius: 18px;
+      background: #fff7ed;
+      color: #c2410c;
+      border: 1px solid #fed7aa;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .result-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    .summary-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .summary-card p {
+      margin: 8px 0;
+      color: #475569;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .health-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: #f8fffe;
+      border: 1px solid #ccfbf1;
+      border-left: 5px solid #0f766e;
+    }
+
+    .health-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #ccfbf1;
+      color: #0f766e;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tag.warning {
+      background: #ffedd5;
+      color: #c2410c;
+    }
+
+    .tag.safe {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .tag.info {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .health-card p {
+      margin: 8px 0;
+      color: #475569;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .score {
+      color: #0f766e;
+      font-weight: 900;
+    }
+
+    .risk-text {
+      color: #b45309 !important;
+    }
+
+    .urgent {
+      padding: 16px;
+      border-radius: 18px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      line-height: 1.8;
+      font-weight: 700;
+    }
+
+    .copy-btn {
+      width: fit-content;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 16px;
+      background: #111827;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background: #020617;
+    }
+
+    .history-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #475569;
+      line-height: 1.7;
+    }
+
+    .history-list li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .left-card {
+        position: static;
+      }
+
+      .overview {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero {
+        margin: 12px;
+        padding: 22px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero h1 {
+        font-size: 26px;
+      }
+
+      .hero-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .primary-btn,
+      .secondary-btn {
+        width: 100%;
+      }
+
+      .dashboard {
+        padding: 0 12px 16px;
+      }
+
+      .nodes {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="hero">
+      <div>
+        <p class="hero-label">Medical QA Information Retrieval Demo</p>
+        <h1>医疗健康信息检索 Demo</h1>
+        <p class="hero-desc">
+          面向健康问答场景的前端信息检索原型，支持症状描述匹配、健康知识查询和风险信号提示。
+          项目重点展示文本输入处理、关键词匹配、结构化结果渲染和安全提示设计。
+        </p>
+      </div>
+
+      <div class="hero-actions">
+        <button class="secondary-btn" onclick="resetResult()">清空结果</button>
+        <button class="primary-btn" onclick="runWorkflow()">运行检索</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <aside class="card left-card">
+        <h2 class="card-title">检索任务</h2>
+
+        <button class="workflow-btn active" data-type="symptom">
+          <span>01</span>症状信息检索
+        </button>
+
+        <button class="workflow-btn" data-type="disease">
+          <span>02</span>疾病知识查询
+        </button>
+
+        <button class="workflow-btn" data-type="risk">
+          <span>03</span>风险信号检查
+        </button>
+
+        <div class="ability-box">
+          <h3>项目能力点</h3>
+          <ul>
+            <li>动态表单渲染</li>
+            <li>关键词提取与匹配</li>
+            <li>结构化健康信息展示</li>
+            <li>风险信号优先提示</li>
+            <li>历史记录与一键复制</li>
+          </ul>
+        </div>
+
+        <div class="notice">
+          本页面仅为前端项目 Demo，用于展示健康信息检索与结果组织能力，不提供医疗诊断、处方或治疗方案。
+        </div>
+      </aside>
+
+      <section class="center">
+        <section class="card overview">
+          <div>
+            <p class="small-label">Current Task</p>
+            <h2 id="workflowTitle">症状信息检索</h2>
+            <p id="workflowDesc">
+              根据用户输入的症状描述进行关键词匹配，返回相关健康信息、常见原因和就医建议提示。
+            </p>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <strong>3</strong>
+              <span>任务模板</span>
+            </div>
+            <div class="metric">
+              <strong>8+</strong>
+              <span>知识条目</span>
+            </div>
+            <div class="metric">
+              <strong>4</strong>
+              <span>处理节点</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <h2>处理流程</h2>
+              <p>将文本输入、关键词识别、知识匹配和风险提示拆成可解释的前端节点。</p>
+            </div>
+          </div>
+          <div class="nodes" id="workflowNodes"></div>
+        </section>
+
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <h2>检索结果</h2>
+              <p>输出相关健康信息、匹配依据、风险提示和下一步建议。</p>
+            </div>
+          </div>
+          <div id="result" class="empty">
+            填写任意一个条件后点击“运行检索”，这里会生成结构化结果。
+          </div>
+        </section>
+      </section>
+
+      <aside class="right">
+        <section class="card form-card">
+          <h2 class="card-title">输入配置</h2>
+          <form id="agentForm"></form>
+        </section>
+
+        <section class="card history-card">
+          <h2 class="card-title">检索历史</h2>
+          <ul id="history" class="history-list">
+            <li>暂无检索记录</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const workflows = {
+      symptom: {
+        title: "症状信息检索",
+        desc: "根据用户输入的症状描述进行关键词匹配，返回相关健康信息、常见原因和就医建议提示。",
+        nodes: [
+          ["文本输入", "接收用户输入的症状、持续时间、体温和补充描述。"],
+          ["关键词提取", "识别发热、咳嗽、腹痛、头痛、皮疹等健康关键词。"],
+          ["知识匹配", "从本地健康知识库中匹配相关条目并计算关联度。"],
+          ["风险提示", "优先展示需要及时就医的风险信号和安全提醒。"]
+        ],
+        fields: [
+          { name: "symptoms", label: "症状描述", type: "textarea", placeholder: "发热、咳嗽、头痛、腹痛、恶心、皮疹、尿痛等" },
+          { name: "duration", label: "持续时间", type: "select", options: ["1天内", "1-3天", "3-7天", "超过1周"] },
+          { name: "temperature", label: "体温情况", type: "select", options: ["未测量", "正常", "低热", "高热"] },
+          { name: "ageGroup", label: "人群", type: "select", options: ["成人", "儿童", "老人", "孕期"] },
+          { name: "extra", label: "补充信息（可选）", type: "textarea", placeholder: "是否有基础病、近期接触史、用药史或其他不适" }
+        ]
+      },
+
+      disease: {
+        title: "疾病知识查询",
+        desc: "输入疾病或健康问题关键词，查询相关症状、常见诱因和就医建议。",
+        nodes: [
+          ["关键词输入", "输入疾病名称、症状名称或健康问题关键词。"],
+          ["条目检索", "在本地知识库中查找相关健康知识。"],
+          ["结果组织", "整理症状表现、常见原因和注意事项。"],
+          ["安全提醒", "展示不确定性说明和就医建议。"]
+        ],
+        fields: [
+          { name: "query", label: "查询关键词", type: "input", placeholder: "感冒、过敏性鼻炎、胃肠炎、偏头痛、尿路感染等" },
+          { name: "focus", label: "关注方向", type: "select", options: ["症状表现", "常见原因", "就医建议", "日常注意"] },
+          { name: "extra", label: "补充描述（可选）", type: "textarea", placeholder: "想了解哪些方面，或当前有哪些不适" }
+        ]
+      },
+
+      risk: {
+        title: "风险信号检查",
+        desc: "根据用户输入内容检查是否包含高风险关键词，并给出及时就医提示。",
+        nodes: [
+          ["信息收集", "接收症状描述和持续时间。"],
+          ["红旗识别", "识别胸痛、呼吸困难、意识异常、剧烈腹痛等风险信号。"],
+          ["风险分层", "根据关键词和持续时间输出风险提示等级。"],
+          ["行动建议", "提醒用户根据风险情况及时寻求专业医疗帮助。"]
+        ],
+        fields: [
+          { name: "description", label: "当前情况描述", type: "textarea", placeholder: "胸痛、呼吸困难、意识模糊、剧烈腹痛、持续高热等" },
+          { name: "duration", label: "持续时间", type: "select", options: ["刚刚出现", "数小时", "1-3天", "超过3天"] },
+          { name: "severity", label: "自评严重程度", type: "select", options: ["轻微", "中等", "严重", "无法判断"] },
+          { name: "extra", label: "补充信息（可选）", type: "textarea", placeholder: "年龄、基础疾病、是否外伤、是否孕期等" }
+        ]
+      }
+    };
+
+    const knowledgeBase = [
+      {
+        name: "上呼吸道感染相关信息",
+        category: "呼吸系统",
+        keywords: ["发热", "咳嗽", "流鼻涕", "鼻塞", "咽痛", "喉咙痛", "打喷嚏", "感冒", "cold", "cough", "fever"],
+        symptoms: "常见表现包括鼻塞、流涕、咽痛、咳嗽、低热、乏力等。",
+        causes: "常见原因包括病毒感染、受凉、疲劳、季节变化或接触呼吸道感染人群。",
+        advice: "注意休息、补充水分、观察体温和症状变化。若出现持续高热、呼吸困难、胸痛或症状加重，应及时就医。",
+        redFlags: ["持续高热", "呼吸困难", "胸痛", "意识异常"],
+        level: "常见"
+      },
+      {
+        name: "过敏性鼻炎相关信息",
+        category: "耳鼻喉",
+        keywords: ["鼻痒", "打喷嚏", "流清鼻涕", "鼻塞", "眼痒", "过敏", "花粉", "allergy"],
+        symptoms: "常见表现包括反复打喷嚏、鼻痒、流清水样鼻涕、鼻塞，有时伴眼痒或流泪。",
+        causes: "常见诱因包括花粉、尘螨、动物毛发、冷空气、空气污染等。",
+        advice: "可记录诱因并减少接触。若症状反复、影响睡眠或学习工作，建议咨询耳鼻喉科或过敏相关门诊。",
+        redFlags: ["喘息", "呼吸困难", "严重眼面部肿胀"],
+        level: "常见"
+      },
+      {
+        name: "急性胃肠炎相关信息",
+        category: "消化系统",
+        keywords: ["腹泻", "呕吐", "恶心", "腹痛", "肚子痛", "拉肚子", "胃痛", "gastroenteritis"],
+        symptoms: "常见表现包括腹泻、恶心、呕吐、腹痛、乏力，有时伴低热。",
+        causes: "可能与饮食不洁、病毒或细菌感染、食物刺激、胃肠功能紊乱有关。",
+        advice: "注意补充水分，观察尿量、精神状态和腹痛变化。若出现频繁呕吐、明显脱水、血便、剧烈腹痛或高热，应及时就医。",
+        redFlags: ["血便", "剧烈腹痛", "明显脱水", "持续高热"],
+        level: "常见"
+      },
+      {
+        name: "偏头痛相关信息",
+        category: "神经系统",
+        keywords: ["头痛", "偏头痛", "恶心", "怕光", "怕吵", "一侧头痛", "migraine"],
+        symptoms: "常见表现包括反复头痛，可能为单侧搏动样疼痛，可伴恶心、怕光、怕吵。",
+        causes: "可能与睡眠不足、压力、饮食、激素变化、强光刺激或遗传倾向有关。",
+        advice: "建议记录头痛频率、诱因和持续时间。若出现突发剧烈头痛、肢体无力、言语不清、意识异常，应立即就医。",
+        redFlags: ["突发剧烈头痛", "肢体无力", "言语不清", "意识异常"],
+        level: "需观察"
+      },
+      {
+        name: "尿路感染相关信息",
+        category: "泌尿系统",
+        keywords: ["尿痛", "尿频", "尿急", "血尿", "小便疼", "排尿疼", "尿路感染", "uti"],
+        symptoms: "常见表现包括尿频、尿急、尿痛、下腹不适，有时可能伴血尿或发热。",
+        causes: "可能与细菌感染、饮水少、憋尿、局部卫生习惯或免疫状态有关。",
+        advice: "建议及时就医评估，尤其是发热、腰痛、血尿、孕期或反复发作时，不建议自行处理拖延。",
+        redFlags: ["发热", "腰痛", "血尿", "孕期"],
+        level: "建议就医"
+      },
+      {
+        name: "皮肤过敏或皮疹相关信息",
+        category: "皮肤科",
+        keywords: ["皮疹", "红疹", "瘙痒", "过敏", "荨麻疹", "起疙瘩", "rash", "itch"],
+        symptoms: "常见表现包括皮肤发红、瘙痒、风团、丘疹或局部肿胀。",
+        causes: "可能与食物、药物、接触物、昆虫叮咬、环境刺激或感染有关。",
+        advice: "建议回忆近期食物、药物和接触物变化。若出现呼吸困难、面唇肿胀、全身严重反应，应立即就医。",
+        redFlags: ["呼吸困难", "面唇肿胀", "全身严重反应"],
+        level: "需观察"
+      },
+      {
+        name: "眼部结膜炎相关信息",
+        category: "眼科",
+        keywords: ["眼红", "眼痒", "流泪", "眼屎", "分泌物", "结膜炎", "眼睛红"],
+        symptoms: "常见表现包括眼红、流泪、异物感、分泌物增多或眼痒。",
+        causes: "可能与病毒、细菌、过敏、隐形眼镜使用或眼部刺激有关。",
+        advice: "注意手卫生，避免揉眼和共用毛巾。若出现视力下降、明显眼痛、畏光或外伤后眼红，应及时就医。",
+        redFlags: ["视力下降", "明显眼痛", "畏光", "眼外伤"],
+        level: "需观察"
+      },
+      {
+        name: "焦虑相关躯体不适信息",
+        category: "心理健康",
+        keywords: ["心慌", "胸闷", "紧张", "失眠", "焦虑", "出汗", "手抖", "panic", "anxiety"],
+        symptoms: "可能表现为心慌、胸闷、出汗、手抖、紧张、失眠或注意力下降。",
+        causes: "可能与压力、睡眠不足、生活事件、长期紧张或心理状态有关，也需要排除躯体疾病因素。",
+        advice: "若症状反复影响生活，建议寻求心理咨询或专业医疗评估。若出现明显胸痛、晕厥、呼吸困难，应优先排除急症。",
+        redFlags: ["胸痛", "晕厥", "呼吸困难", "自伤想法"],
+        level: "需评估"
+      }
+    ];
+
+    const redFlagKeywords = [
+      "胸痛",
+      "呼吸困难",
+      "意识模糊",
+      "意识异常",
+      "昏迷",
+      "晕厥",
+      "抽搐",
+      "剧烈腹痛",
+      "持续高热",
+      "高热不退",
+      "血便",
+      "咯血",
+      "严重外伤",
+      "中毒",
+      "自伤",
+      "自杀",
+      "视力下降",
+      "肢体无力",
+      "言语不清",
+      "面唇肿胀"
+    ];
+
+    let currentType = "symptom";
+    let historyList = [];
+
+    const workflowTitle = document.getElementById("workflowTitle");
+    const workflowDesc = document.getElementById("workflowDesc");
+    const workflowNodes = document.getElementById("workflowNodes");
+    const agentForm = document.getElementById("agentForm");
+    const result = document.getElementById("result");
+    const history = document.getElementById("history");
+    const buttons = document.querySelectorAll(".workflow-btn");
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderWorkflow() {
+      const workflow = workflows[currentType];
+
+      workflowTitle.textContent = workflow.title;
+      workflowDesc.textContent = workflow.desc;
+
+      workflowNodes.innerHTML = workflow.nodes.map((node, index) => `
+        <div class="node">
+          <span class="node-step">Step ${index + 1}</span>
+          <h3>${node[0]}</h3>
+          <p>${node[1]}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderForm() {
+      const fields = workflows[currentType].fields;
+
+      agentForm.innerHTML = fields.map(field => {
+        if (field.type === "input") {
+          return `
+            <div class="form-item">
+              <label>${field.label}</label>
+              <input name="${field.name}" placeholder="${field.placeholder || ""}">
+            </div>
+          `;
+        }
+
+        if (field.type === "textarea") {
+          return `
+            <div class="form-item">
+              <label>${field.label}</label>
+              <textarea name="${field.name}" placeholder="${field.placeholder || ""}"></textarea>
+            </div>
+          `;
+        }
+
+        if (field.type === "select") {
+          return `
+            <div class="form-item">
+              <label>${field.label}</label>
+              <select name="${field.name}">
+                <option value="">不限</option>
+                ${field.options.map(option => `<option value="${option}">${option}</option>`).join("")}
+              </select>
+            </div>
+          `;
+        }
+      }).join("");
+    }
+
+    function getFormData() {
+      const formData = new FormData(agentForm);
+      const data = {};
+
+      for (const [key, value] of formData.entries()) {
+        data[key] = value.trim();
+      }
+
+      return data;
+    }
+
+    function hasAnyInput(data) {
+      return Object.values(data).some(value => value !== "");
+    }
+
+    function validateForm(data) {
+      if (!hasAnyInput(data)) {
+        result.className = "";
+        result.innerHTML = `
+          <div class="error">
+            请至少填写或选择一个条件后再运行。可以输入症状、疾病关键词或风险描述。
+          </div>
+        `;
+        return false;
+      }
+
+      return true;
+    }
+
+    function runWorkflow() {
+      const data = getFormData();
+
+      if (!validateForm(data)) {
+        return;
+      }
+
+      result.className = "";
+      result.innerHTML = `<div class="loading">系统正在进行关键词匹配与结构化信息检索...</div>`;
+
+      setTimeout(() => {
+        if (currentType === "symptom") {
+          result.innerHTML = createSymptomResult(data);
+        }
+
+        if (currentType === "disease") {
+          result.innerHTML = createDiseaseResult(data);
+        }
+
+        if (currentType === "risk") {
+          result.innerHTML = createRiskResult(data);
+        }
+
+        historyList.unshift(`${workflows[currentType].title}｜${new Date().toLocaleString()}`);
+        renderHistory();
+      }, 600);
+    }
+
+    function normalizeText(value) {
+      return String(value || "").toLowerCase();
+    }
+
+    function findRedFlags(text) {
+      return redFlagKeywords.filter(keyword => text.includes(keyword.toLowerCase()) || text.includes(keyword));
+    }
+
+    function calculateMatchScore(item, text) {
+      let score = 0;
+      const normalizedText = normalizeText(text);
+
+      item.keywords.forEach(keyword => {
+        const normalizedKeyword = normalizeText(keyword);
+
+        if (normalizedText.includes(normalizedKeyword)) {
+          score += 18;
+        }
+      });
+
+      if (normalizedText.includes(item.category.toLowerCase())) {
+        score += 8;
+      }
+
+      return Math.min(96, Math.max(45, score + 42));
+    }
+
+    function searchKnowledge(text) {
+      const matched = knowledgeBase
+        .map(item => ({
+          ...item,
+          score: calculateMatchScore(item, text)
+        }))
+        .filter(item => item.score > 45)
+        .sort((a, b) => b.score - a.score);
+
+      if (matched.length > 0) {
+        return matched.slice(0, 4);
+      }
+
+      return knowledgeBase.slice(0, 3).map(item => ({
+        ...item,
+        score: 45
+      }));
+    }
+
+    function createUrgentBlock(flags) {
+      if (flags.length === 0) {
+        return "";
+      }
+
+      return `
+        <div class="urgent">
+          检测到可能需要及时关注的风险信号：${flags.map(flag => `「${escapeHTML(flag)}」`).join("、")}。
+          如症状明显、持续加重或伴随严重不适，请及时联系专业医疗机构或急救服务。
+        </div>
+      `;
+    }
+
+    function createSymptomResult(data) {
+      const text = [
+        data.symptoms,
+        data.duration,
+        data.temperature,
+        data.ageGroup,
+        data.extra
+      ].filter(Boolean).join(" ");
+
+      const safeSymptoms = escapeHTML(data.symptoms || "未填写");
+      const safeDuration = escapeHTML(data.duration || "未填写");
+      const safeTemperature = escapeHTML(data.temperature || "未填写");
+      const safeAgeGroup = escapeHTML(data.ageGroup || "未填写");
+      const safeExtra = escapeHTML(data.extra || "暂无补充信息");
+
+      const flags = findRedFlags(text);
+      const matched = searchKnowledge(text);
+
+      return `
+        <div class="result-grid">
+          ${createUrgentBlock(flags)}
+
+          <div class="summary-card">
+            <h3>检索概览</h3>
+            <p><strong>症状描述：</strong>${safeSymptoms}</p>
+            <p><strong>持续时间：</strong>${safeDuration}</p>
+            <p><strong>体温情况：</strong>${safeTemperature}</p>
+            <p><strong>人群：</strong>${safeAgeGroup}</p>
+            <p><strong>补充信息：</strong>${safeExtra}</p>
+            <p><strong>说明：</strong>结果基于本地关键词规则和健康知识条目匹配，仅用于信息展示，不构成诊断。</p>
+          </div>
+
+          ${matched.map(item => `
+            <div class="health-card">
+              <h3>${item.name}</h3>
+              <div class="tags">
+                <span class="tag">${item.category}</span>
+                <span class="tag info">${item.level}</span>
+                <span class="tag">匹配度 ${item.score}%</span>
+              </div>
+              <p><strong>相关表现：</strong>${item.symptoms}</p>
+              <p><strong>常见原因：</strong>${item.causes}</p>
+              <p><strong>信息提示：</strong>${item.advice}</p>
+              <p class="risk-text"><strong>需要关注：</strong>${item.redFlags.join("、")}。</p>
+            </div>
+          `).join("")}
+
+          <div class="health-card">
+            <h3>安全提示</h3>
+            <p>本 Demo 不提供医疗诊断、处方或治疗方案。若症状持续、加重，或用户属于儿童、老人、孕期、有基础疾病等情况，应优先咨询专业医生。</p>
+          </div>
+
+          <button class="copy-btn" onclick="copyResult()">复制检索结果</button>
+        </div>
+      `;
+    }
+
+    function createDiseaseResult(data) {
+      const text = [
+        data.query,
+        data.focus,
+        data.extra
+      ].filter(Boolean).join(" ");
+
+      const safeQuery = escapeHTML(data.query || "未填写");
+      const safeFocus = escapeHTML(data.focus || "未填写");
+      const safeExtra = escapeHTML(data.extra || "暂无补充描述");
+
+      const flags = findRedFlags(text);
+      const matched = searchKnowledge(text);
+
+      return `
+        <div class="result-grid">
+          ${createUrgentBlock(flags)}
+
+          <div class="summary-card">
+            <h3>查询概览</h3>
+            <p><strong>查询关键词：</strong>${safeQuery}</p>
+            <p><strong>关注方向：</strong>${safeFocus}</p>
+            <p><strong>补充描述：</strong>${safeExtra}</p>
+            <p><strong>说明：</strong>系统根据关键词匹配相关健康知识，并按关联度展示。</p>
+          </div>
+
+          ${matched.map(item => `
+            <div class="health-card">
+              <h3>${item.name}</h3>
+              <div class="tags">
+                <span class="tag">${item.category}</span>
+                <span class="tag info">${item.level}</span>
+                <span class="tag">关联度 ${item.score}%</span>
+              </div>
+              <p><strong>症状表现：</strong>${item.symptoms}</p>
+              <p><strong>常见原因：</strong>${item.causes}</p>
+              <p><strong>就医与观察建议：</strong>${item.advice}</p>
+              <p class="risk-text"><strong>风险信号：</strong>${item.redFlags.join("、")}。</p>
+            </div>
+          `).join("")}
+
+          <button class="copy-btn" onclick="copyResult()">复制查询结果</button>
+        </div>
+      `;
+    }
+
+    function createRiskResult(data) {
+      const text = [
+        data.description,
+        data.duration,
+        data.severity,
+        data.extra
+      ].filter(Boolean).join(" ");
+
+      const safeDescription = escapeHTML(data.description || "未填写");
+      const safeDuration = escapeHTML(data.duration || "未填写");
+      const safeSeverity = escapeHTML(data.severity || "未填写");
+      const safeExtra = escapeHTML(data.extra || "暂无补充信息");
+
+      const flags = findRedFlags(text);
+      const matched = searchKnowledge(text);
+
+      const riskLevel = flags.length > 0 || data.severity === "严重"
+        ? "较高风险"
+        : data.severity === "中等" || data.duration === "超过3天"
+          ? "需要关注"
+          : "暂未识别明显高风险信号";
+
+      const riskClass = riskLevel === "较高风险" ? "warning" : "safe";
+
+      return `
+        <div class="result-grid">
+          ${createUrgentBlock(flags)}
+
+          <div class="summary-card">
+            <h3>风险检查概览</h3>
+            <p><strong>当前描述：</strong>${safeDescription}</p>
+            <p><strong>持续时间：</strong>${safeDuration}</p>
+            <p><strong>自评严重程度：</strong>${safeSeverity}</p>
+            <p><strong>补充信息：</strong>${safeExtra}</p>
+            <p><strong>风险提示等级：</strong><span class="tag ${riskClass}">${riskLevel}</span></p>
+          </div>
+
+          <div class="health-card">
+            <h3>下一步建议</h3>
+            <div class="tags">
+              <span class="tag ${riskClass}">${riskLevel}</span>
+              <span class="tag">安全提醒</span>
+            </div>
+            <p><strong>建议：</strong>如果症状明显、持续加重，或出现胸痛、呼吸困难、意识异常、剧烈腹痛、持续高热、血便、肢体无力等情况，应及时寻求专业医疗帮助。</p>
+            <p><strong>说明：</strong>风险检查只基于关键词提示，不能替代医生面诊、检查和医学判断。</p>
+          </div>
+
+          ${matched.slice(0, 2).map(item => `
+            <div class="health-card">
+              <h3>相关健康信息：${item.name}</h3>
+              <p><strong>相关表现：</strong>${item.symptoms}</p>
+              <p><strong>信息提示：</strong>${item.advice}</p>
+            </div>
+          `).join("")}
+
+          <button class="copy-btn" onclick="copyResult()">复制风险检查结果</button>
+        </div>
+      `;
+    }
+
+    function renderHistory() {
+      if (historyList.length === 0) {
+        history.innerHTML = "<li>暂无检索记录</li>";
+        return;
+      }
+
+      history.innerHTML = historyList
+        .map(item => `<li>${item}</li>`)
+        .join("");
+    }
+
+    function copyResult() {
+      navigator.clipboard.writeText(result.innerText);
+      alert("已复制结果");
+    }
+
+    function resetResult() {
+      result.className = "empty";
+      result.innerHTML = "填写任意一个条件后点击“运行检索”，这里会生成结构化结果。";
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        buttons.forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+
+        currentType = button.dataset.type;
+
+        renderWorkflow();
+        renderForm();
+        resetResult();
+      });
+    });
+
+    renderWorkflow();
+    renderForm();
+    renderHistory();
+  </script>
+</body>
+</html>
