@@ -1,249 +1,135 @@
-# medical-qa-demo
-# 医疗健康信息检索 Demo
+# APU Smart Campus Transport System  
+# APU 智能校园交通系统 Demo
 
-一个面向健康问答场景的前端信息检索 Demo，用于模拟用户输入症状或健康问题后，系统进行关键词匹配、健康知识检索、风险信号提示和结构化结果展示的流程。
+A Flutter web demo for campus shuttle routes, parking reservation, ETA countdown, and transport status visualization.
 
-本项目重点展示前端在医疗健康信息查询场景中的文本处理、动态表单、规则匹配、结果渲染和安全提示设计能力。
+一个基于 Flutter 的校园交通系统前端 Demo，用于展示校车路线、停车预约、ETA 倒计时和校园交通状态可视化。
 
-## 在线预览
+---
 
-GitHub Pages：
+## Live Demo 在线演示
+
+GitHub Pages:  
+https://chrisbetheking.github.io/apu-transport-demo/
+
+---
+
+## Project Overview 项目简介
+
+This project is a front-end Flutter demo designed to simulate a smart campus transport system.  
+It focuses on user interface design, route visualization, local state management, and simple interactive features.
+
+本项目是一个前端 Flutter Demo，用于模拟校园交通管理系统。  
+项目重点展示界面设计、路线可视化、本地状态管理和基础交互功能。
+
+The system includes:
+
+- Campus shuttle route display
+- Simplified campus map visualization
+- ETA countdown component
+- Parking slot reservation simulation
+- Transport status cards
+- Responsive Flutter Web layout
+
+系统包含以下功能：
+
+- 校园校车路线展示
+- 简化校园地图可视化
+- 校车 ETA 倒计时
+- 停车位预约模拟
+- 交通状态卡片
+- 响应式 Flutter Web 页面布局
+
+---
+
+## Features 功能模块
+
+### 1. Dashboard 首页概览
+
+The dashboard provides a quick overview of current transport information, including shuttle status, parking availability, and the next shuttle ETA.
+
+首页用于展示校园交通的整体状态，包括校车运行状态、可用停车位数量以及下一班校车预计到达时间。
+
+Main elements:
+
+- Today’s shuttle status
+- Available parking slot count
+- Next shuttle arrival countdown
+- Quick navigation to main modules
+
+---
+
+### 2. Shuttle Routes 校车路线
+
+This section displays several simulated campus shuttle routes with stop information, estimated travel time, and current route status.
+
+该模块展示模拟校园校车路线，包括站点信息、预计行驶时间和当前路线状态。
+
+Example routes:
+
+- Main Gate → Campus Block A
+- Campus Block A → Library
+- Library → Parking Area
+- Parking Area → Main Gate
+
+Each route includes:
+
+- Route name
+- Stops
+- Estimated time
+- Current status
+- Next arrival time
+
+---
+
+### 3. Campus Map Visualization 校园路线图可视化
+
+A simplified campus map is created using Flutter `CustomPaint`.  
+The map shows campus nodes, route lines, and a moving shuttle indicator.
+
+项目使用 Flutter 的 `CustomPaint` 绘制简化校园路线图。  
+地图中包含校园节点、路线连接线以及模拟移动中的校车标记。
+
+This feature demonstrates:
+
+- Custom drawing with Flutter
+- Basic route visualization
+- Animated shuttle movement
+- UI logic separated into reusable widgets
+
+---
+
+### 4. Parking Reservation 停车预约模拟
+
+The parking module displays several parking slots with different states.
+
+停车模块展示多个模拟停车位，并提供简单的预约交互。
+
+Parking states:
+
+- Available
+- Reserved
+- Full
+
+Users can click an available parking slot to simulate a reservation.  
+The slot status will then change locally from `Available` to `Reserved`.
+
+用户可以点击可用停车位进行模拟预约，停车位状态会在本地从 `Available` 更新为 `Reserved`。
+
+This feature does not connect to a backend.  
+It is implemented with local state only.
+
+该功能不连接后端，仅使用本地状态进行演示。
+
+---
+
+### 5. ETA Countdown 到站倒计时
+
+The ETA countdown component shows the estimated time before the next shuttle arrives.
+
+ETA 倒计时组件用于展示下一班校车预计到达时间。
+
+Example:
 
 ```text
-https://chrisbetheking.github.io/medical-qa-demo/
-项目定位
-
-本项目不是医疗诊断系统，也不提供诊断、处方或治疗方案。
-
-项目定位为：
-
-医疗健康信息检索 Demo
-
-主要用于展示：
-
-症状文本输入处理
-健康关键词匹配
-本地健康知识库检索
-风险信号识别
-结构化结果展示
-安全免责声明设计
-核心功能
-1. 症状信息检索
-
-用户可以输入症状描述，例如：
-
-发热、咳嗽、头痛、腹痛、恶心、皮疹、尿痛等
-
-系统会根据输入内容进行关键词匹配，并输出：
-
-相关健康信息
-常见症状表现
-可能相关原因
-信息提示
-需要关注的风险信号
-安全提醒
-2. 疾病知识查询
-
-用户可以输入疾病或健康问题关键词，例如：
-
-感冒、过敏性鼻炎、胃肠炎、偏头痛、尿路感染等
-
-系统会从本地健康知识库中检索相关条目，并展示：
-
-疾病或健康问题名称
-所属类别
-症状表现
-常见原因
-就医与观察建议
-风险信号
-3. 风险信号检查
-
-用户可以输入当前不适情况，例如：
-
-胸痛、呼吸困难、意识模糊、剧烈腹痛、持续高热等
-
-系统会检查是否包含高风险关键词，并输出：
-
-风险提示等级
-已识别的风险信号
-下一步建议
-安全说明
-
-如果检测到较高风险关键词，页面会优先显示醒目的风险提示。
-
-项目亮点
-使用原生 HTML / CSS / JavaScript 完成完整交互流程
-实现多任务模块切换
-支持动态表单渲染
-构建本地健康知识库
-实现关键词匹配与关联度计算
-实现风险信号优先提示
-实现结构化健康信息展示
-支持检索历史记录
-支持一键复制结果
-页面适配桌面端和移动端
-技术栈
-HTML5
-CSS3
-JavaScript
-GitHub Pages
-
-本项目目前为纯前端 Demo，所有知识条目、匹配逻辑和风险提示均在前端本地模拟完成。
-
-项目结构
-medical-qa-demo/
-├── index.html      # 页面结构、样式和交互逻辑
-└── README.md       # 项目说明文档
-
-如果后续拆分文件，也可以调整为：
-
-medical-qa-demo/
-├── index.html
-├── style.css
-├── script.js
-└── README.md
-业务流程设计
-症状信息检索流程
-用户输入症状描述
-    ↓
-系统提取关键词
-    ↓
-匹配本地健康知识库
-    ↓
-计算关联度
-    ↓
-输出结构化健康信息
-    ↓
-展示风险提示和安全说明
-疾病知识查询流程
-用户输入疾病或健康问题
-    ↓
-系统检索相关知识条目
-    ↓
-整理症状表现和常见原因
-    ↓
-输出就医与观察建议
-    ↓
-展示风险信号
-风险信号检查流程
-用户输入当前情况
-    ↓
-系统识别红旗关键词
-    ↓
-判断风险提示等级
-    ↓
-优先展示紧急提醒
-    ↓
-输出下一步建议
-本地知识库示例
-
-当前 Demo 内置了多个健康信息条目，包括：
-
-上呼吸道感染相关信息
-过敏性鼻炎相关信息
-急性胃肠炎相关信息
-偏头痛相关信息
-尿路感染相关信息
-皮肤过敏或皮疹相关信息
-眼部结膜炎相关信息
-焦虑相关躯体不适信息
-
-每个条目包含：
-
-名称
-类别
-关键词
-症状表现
-常见原因
-信息提示
-风险信号
-提示等级
-风险信号示例
-
-系统会对以下类型的关键词进行重点提示：
-
-胸痛
-呼吸困难
-意识异常
-昏迷
-晕厥
-抽搐
-剧烈腹痛
-持续高热
-血便
-咯血
-严重外伤
-中毒
-自伤想法
-视力下降
-肢体无力
-言语不清
-面唇肿胀
-
-当输入内容中出现这些关键词时，系统会优先展示风险提醒，提示用户及时寻求专业医疗帮助。
-
-当前版本说明
-
-当前版本主要用于展示前端交互和信息检索流程设计能力。
-
-系统中的健康信息、匹配度和风险提示均为前端规则模拟结果，不代表医学诊断结果，也不能替代医生面诊、检查或专业医学判断。
-
-后续可扩展方向
-
-后续可以进一步升级为更完整的健康问答信息系统：
-
-接入后端服务
-接入大模型 API
-接入真实医学知识库
-增加用户登录
-增加查询历史数据库
-增加知识库管理后台
-增加多轮问答能力
-增加医学内容审核机制
-增加敏感风险词更严格的安全策略
-增加医生端或客服端后台
-增加移动端适配和小程序入口
-AI 扩展设想
-
-后续如果接入 AI，可以设计为：
-
-前端症状输入
-    ↓
-后端接口
-    ↓
-医学安全 Prompt 模板
-    ↓
-大模型生成健康信息摘要
-    ↓
-风险词规则二次校验
-    ↓
-返回结构化结果
-
-需要注意的是，医疗健康类 AI 应用必须增加安全边界：
-
-不输出确诊结论
-不输出处方药建议
-不承诺治疗效果
-对高风险症状优先建议就医
-对儿童、老人、孕期、基础病人群加强提示
-对自伤、自杀等内容进行紧急风险提示
-项目展示重点
-
-本项目重点展示：
-
-前端页面布局能力
-动态表单设计能力
-JavaScript 交互能力
-文本关键词匹配能力
-本地知识库设计能力
-结构化结果渲染能力
-风险提示设计能力
-健康类产品安全意识
-工具型产品原型设计能力
-免责声明
-
-本项目仅作为前端学习、作品集展示和业务原型演示使用。
-
-页面中的健康信息、症状匹配、风险提示和建议内容均为模拟结果，仅用于健康信息展示，不构成医疗诊断、治疗建议或处方依据。
-
-如果存在明显不适、症状持续加重，或出现胸痛、呼吸困难、意识异常、剧烈腹痛、持续高热、血便、肢体无力、言语不清等情况，应及时联系专业医疗机构或急救服务。
+Next shuttle arriving in 08:30
